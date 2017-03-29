@@ -47,7 +47,7 @@ These are all entities within IT that represent direct or indirect dependencies 
 
 Now we'll introduce a reference architecture that we've used as a baseline for initial SRE with ACP.  _Note:_ The specifics of the platform implementation (# of worker nodes, cache cluster, databases) have intentionally been omitted.  This information is unimportant to the conversation about how to operate the environment because any monitoring and response solution should be scalable enough to deal with variances in the platform implementation.  As platform adoption grows, so will it's usage and capacity, and our reference architecture here should remain unaffected.
 
-![ref-arch-monitoring.png](https://gist.githubusercontent.com/mammerman/b45149f57edde794436019b83e7450eb/raw/9026096cfea3a777c7be4e711d39ffedc77acb31/ref-arch-monitoring.png)
+![ref-arch-monitoring.png](https://github.com/mammerman/docs/blob/master/site-reliability-engineering-for-acp/ref-arch-monitoring.png)
 
 ### System Availability
 
