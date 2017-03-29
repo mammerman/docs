@@ -45,9 +45,19 @@ These are all entities within IT that represent direct or indirect dependencies 
 
 ## Reference Architecture
 
-Now we'll introduce a reference architecture that we've used as a baseline for initial SRE with ACP.  _Note:_ The specifics of the platform implementation (# of worker nodes, cache cluster, databases) have intentionally been omitted.  This information is unimportant to the conversation about how to operate the environment because any monitoring and response solution should be scalable enough to deal with variances in the platform implementation.  As platform adoption grows, so will it's usage and capacity, and our reference architecture here should remain unaffected.
+Now we'll introduce a reference architecture that we've used as a baseline for initial SRE with ACP.  _Note:_ The specifics of the platform implementation internals (# of worker nodes, cache cluster, databases) are intentionally omitted.  This information is unimportant to the conversation about how to operate the environment because any monitoring and response solution should be scalable enough to deal with variances in the platform implementation.  As platform adoption grows, so will it's usage and capacity, and our reference architecture here should remain unaffected.
 
 ![ref-arch-monitoring.png](https://github.com/mammerman/docs/blob/master/site-reliability-engineering-for-acp/ref-arch-monitoring.png)
+
+The approach is to use a set of micro services, each responsible for one particular piece of information.  They leverage the ACP Platform Operations APIs to poll for data at a regular interval.  We set these up as Docker containers and use `crontab` on a remote machine to start the containers at regular intervals.  Each micro service does the following:
+1. Startup
+2. Load environmental configuration (API urls, etc.)
+3. Connect to Apprenda API endpoint and retrieve current data
+4. Parse data and construct a corresponding [Prometheus](https://prometheus.io) metric object
+5. Push the metric object to a configured `pushgateway`
+6. Clean up and shut down
+
+The jobs are short-lived, existing only for a couple hundred milliseconds.  The data they push to Prometheus becomes part of the _time-series_ for that particular metric and the rest of the analysis and reporting is handled by Prometheus and other tools.
 
 ### System Availability
 
